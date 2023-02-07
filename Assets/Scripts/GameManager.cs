@@ -4,38 +4,81 @@ using UnityEngine;
 using TMPro;
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private GameState gameState;   
+    [SerializeField] private int score;
+    [SerializeField] private float currentTime;
+    [SerializeField] private float delaySpawnTime;
+    [SerializeField] private GameObject whiteEgg;
+    [SerializeField] private GameObject yellowEgg;
+    [SerializeField] private GameObject blackEgg;
 
-    public int score;
-    public float currentTime;
-    public float delaySpawnTime;
-    public GameObject whiteEgg;
-    public GameObject yellowEgg;
-
-    public TextMeshProUGUI textScore;
+    [SerializeField] private TextMeshProUGUI textScore;
+    [SerializeField] private GameObject m_Basket;
+    [SerializeField] private GameObject m_ScorePanel;
+    [SerializeField] private GameObject startButton;
+    [SerializeField] private GameObject retryButton;
     private void Start()
     {
-        
+
     }
     private void Update()
     {
+        if (gameState == GameState.Play)
+        {
+            OnPlayState();
+        }
+    }
+    public void StartGame()
+    {
+        m_Basket.SetActive(true);
+        m_ScorePanel.SetActive(true);
+        startButton.SetActive(false);
+        retryButton.SetActive(false);
+        gameState = GameState.Play;
+
+        score = 0;
+        textScore.text = $"Score : {score}";
+    }
+    public void EndGame()
+    {
+        m_Basket.SetActive(false);
+        m_ScorePanel.SetActive(true);
+        startButton.SetActive(false);
+        retryButton.SetActive(true);
+        gameState = GameState.End;
+    }
+    public void Retry()
+    {
+        m_Basket.SetActive(false);
+        m_ScorePanel.SetActive(false);
+        startButton.SetActive(true);
+        retryButton.SetActive(false);
+        gameState = GameState.Start;
+    }
+    private void OnPlayState()
+    {
         if (currentTime <= 0)
         {
-            SpawnEggs();
+            SpawnEgg();
             currentTime += delaySpawnTime;
         }
         currentTime -= Time.deltaTime;
     }
-    public void SpawnEggs()
+    private void SpawnEgg()
     {
         int randomEgg = Random.Range(0, 10);
         Vector3 randomPosition = new Vector3(Random.Range(-2, 2), 6, 0);
-        if (randomEgg < 8)
+        switch (randomEgg)
         {
-            Instantiate(whiteEgg, randomPosition, Quaternion.identity);
-        }
-        else
-        {
-            Instantiate(yellowEgg, randomPosition, Quaternion.identity);
+            case < 6:
+                Instantiate(whiteEgg, randomPosition, Quaternion.identity);
+                break;
+            case < 8:
+                Instantiate(yellowEgg, randomPosition, Quaternion.identity);
+                break;
+            default:
+                Instantiate(blackEgg, randomPosition, Quaternion.identity);
+                break;
         }
     }
     public void AddScore(int value)
@@ -43,4 +86,10 @@ public class GameManager : MonoBehaviour
         score += value;
         textScore.text = $"Score : {score}";
     }
+}
+public enum GameState
+{
+    Start,
+    Play,
+    End,
 }
