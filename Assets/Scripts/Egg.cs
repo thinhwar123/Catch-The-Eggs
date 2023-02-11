@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class Egg : MonoBehaviour
 {
-    public int point;
+    [SerializeField] private int point;
+
+    public int Point { get => point; }
+
     private void Update()
     {
         SelfDestroy();
