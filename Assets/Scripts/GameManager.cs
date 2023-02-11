@@ -13,10 +13,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject blackEgg;
 
     [SerializeField] private TextMeshProUGUI textScore;
-    [SerializeField] private GameObject m_Basket;
-    [SerializeField] private GameObject m_ScorePanel;
-    [SerializeField] private GameObject startButton;
-    [SerializeField] private GameObject retryButton;
+    [SerializeField] private GameObject basket;
+
+    [SerializeField] private GameObject startPanel;
+    [SerializeField] private GameObject ingamePanel;
+    [SerializeField] private GameObject endPanel;
+
     private void Start()
     {
 
@@ -30,10 +32,10 @@ public class GameManager : MonoBehaviour
     }
     public void StartGame()
     {
-        m_Basket.SetActive(true);
-        m_ScorePanel.SetActive(true);
-        startButton.SetActive(false);
-        retryButton.SetActive(false);
+        basket.SetActive(true);
+        ingamePanel.SetActive(true);
+        startPanel.SetActive(false);
+        endPanel.SetActive(false);
         gameState = GameState.Play;
 
         score = 0;
@@ -41,18 +43,18 @@ public class GameManager : MonoBehaviour
     }
     public void EndGame()
     {
-        m_Basket.SetActive(false);
-        m_ScorePanel.SetActive(true);
-        startButton.SetActive(false);
-        retryButton.SetActive(true);
+        basket.SetActive(false);
+        ingamePanel.SetActive(true);
+        startPanel.SetActive(false);
+        endPanel.SetActive(true);
         gameState = GameState.End;
     }
     public void Retry()
     {
-        m_Basket.SetActive(false);
-        m_ScorePanel.SetActive(false);
-        startButton.SetActive(true);
-        retryButton.SetActive(false);
+        basket.SetActive(false);
+        ingamePanel.SetActive(false);
+        startPanel.SetActive(true);
+        endPanel.SetActive(false);
         gameState = GameState.Start;
     }
     private void OnPlayState()
@@ -60,7 +62,7 @@ public class GameManager : MonoBehaviour
         if (currentTime <= 0)
         {
             SpawnEgg();
-            currentTime += delaySpawnTime;
+            currentTime += Random.Range(0, delaySpawnTime);
         }
         currentTime -= Time.deltaTime;
     }
